@@ -9,9 +9,13 @@ template <class = void>
 class Graphics
 {
 public:
+    using ProcessingType = bool;
+
 private:
 public:
-    auto Process() -> void {}
+    auto Prepare() -> void {}
+
+    auto Process(ProcessingType pProcessing) -> ProcessingType { return pProcessing; }
 
     auto Draw() -> void
     {
