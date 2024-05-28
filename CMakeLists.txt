@@ -27,3 +27,7 @@ add_executable(${EXECUTABLE} ${CODE_FILES})
 target_link_libraries(${EXECUTABLE} 
     PRIVATE raylib
 )
+
+target_include_directories(${EXECUTABLE}
+    PRIVATE ${CODE_DIR}
+)

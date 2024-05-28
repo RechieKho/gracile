@@ -1,30 +1,27 @@
 #include <raylib.h>
 #include <string>
 
-#include "components/component.hpp"
+#include "definition.hpp"
 #include "app.hpp"
 
-static_assert(IsComponent<decltype(app)>, "App must be a component.");
-
-constexpr const int DEFAULT_SCREEN_WIDTH = 800;
-constexpr const int DEFAULT_SCREEN_HEIGHT = 450;
-constexpr const int DEFAULT_TARGET_FPS = 60;
-constexpr const int DEFAULT_AUDIO_STREAM_BUFFER_SIZE = 4096;
-constexpr const std::string_view DEFAULT_TITLE = "Hello world";
+constexpr const IntType DEFAULT_SCREEN_WIDTH = 800;
+constexpr const IntType DEFAULT_SCREEN_HEIGHT = 450;
+constexpr const IntType DEFAULT_TARGET_FPS = 30;
+constexpr const CharType *DEFAULT_TITLE = "Gracile";
 
 int main()
 {
-    decltype(app)::ProcessingType processing;
+    auto app = App();
 
-    InitWindow(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT, DEFAULT_TITLE.data());
+    InitWindow(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT, DEFAULT_TITLE);
     InitAudioDevice();
-    SetAudioStreamBufferSizeDefault(DEFAULT_AUDIO_STREAM_BUFFER_SIZE);
     SetTargetFPS(DEFAULT_TARGET_FPS);
+    app.Start();
 
     while (!WindowShouldClose())
     {
         {
-            processing = app.Process(processing);
+            app.Process();
         }
 
         {
@@ -34,5 +31,7 @@ int main()
         }
     }
 
+    app.Finish();
+    CloseAudioDevice();
     CloseWindow();
 }
