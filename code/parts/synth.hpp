@@ -46,10 +46,11 @@ public:
 
     auto Process() -> void final
     {
+        waveform->Process();
+
         if (!IsAudioStreamProcessed(stream))
             return;
-
-        waveform->Process();
+        waveform->UpdateSamples();
         UpdateAudioStream(stream, waveform->ViewSamples().data(), waveform->ViewSamples().size());
     }
 

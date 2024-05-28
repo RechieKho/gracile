@@ -12,32 +12,36 @@ template <class TSampleType, SizeType TSampleCount>
 class SineWaveform final : public Waveform<TSampleType, TSampleCount>
 {
 public:
-    using WaveformType = Waveform<TSampleType, TSampleCount>;
+    using WaveformParentType = Waveform<TSampleType, TSampleCount>;
 
 protected:
 private:
 public:
     SineWaveform() = default;
-    SineWaveform(FloatType pFrequency, FloatType pAmplitude) : WaveformType(pFrequency, pAmplitude) {}
+    SineWaveform(FloatType pFrequency, FloatType pAmplitude, FloatType pOffset = 0.0f) : WaveformParentType(pFrequency, pAmplitude, pOffset) {}
     ~SineWaveform() override = default;
 
     auto UpdateSamples() -> void override
     {
-        static double position = 0;
-        for (SizeType i = 0; i < WaveformType::samples.size(); i++)
-        {
-            position += WaveformType::frequency;
-            if (position > 1)
-                position -= 1;
-            WaveformType::samples[i] = static_cast<typename WaveformType::SampleType>(
-                std::clamp(WaveformType::amplitude * std::sin(2 * std::numbers::pi * position), double(std::numeric_limits<typename WaveformType::SampleType>::min()), double(std::numeric_limits<typename WaveformType::SampleType>::max())));
-        }
-    }
+        const auto newOffset = std::fmod(WaveformParentType::samples.size() * WaveformParentType::frequency.ViewCurrent() + WaveformParentType::offset, 1);
 
-    auto Process() -> void override
-    {
-        WaveformType::Process();
-        UpdateSamples();
+        if (
+            !WaveformParentType::amplitude.IsDifferenceSignificant() &&
+            !WaveformParentType::frequency.IsDifferenceSignificant() &&
+            WaveformParentType::offset == newOffset)
+            return;
+
+        for (SizeType i = 0; i < WaveformParentType::samples.size(); i++)
+        {
+            const auto indexProportion = (double(i) / WaveformParentType::samples.size());
+            WaveformParentType::samples[i] = static_cast<typename WaveformParentType::SampleType>(
+                std::clamp(
+                    (WaveformParentType::amplitude.Interpolate(indexProportion)) *
+                        std::sin(2.0f * std::numbers::pi * (i * WaveformParentType::frequency.Interpolate(indexProportion) + WaveformParentType::offset)),
+                    double(std::numeric_limits<typename WaveformParentType::SampleType>::min()),
+                    double(std::numeric_limits<typename WaveformParentType::SampleType>::max())));
+        }
+        WaveformParentType::offset = newOffset;
     }
 };
 
