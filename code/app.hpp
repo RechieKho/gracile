@@ -43,7 +43,7 @@ public:
     FloatType loudness;
 
     App()
-        : keyboard(), loudness(100.0f)
+        : keyboard(), loudness(50.0f)
     {
         // 4th Octave.
         keyboard.insert({KEY_Z, SynthType::CreateSynthFromWaveform<SineWaveform>(C4, 0.0f)});
