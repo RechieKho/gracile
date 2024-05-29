@@ -35,8 +35,8 @@ public:
         FloatType pAmplitudeValue,
         FloatType pOffset = 0.0f)
         : samples(),
-          frequency(pFrequencyValue, DEFAULT_FREQUENCY_MAX_DIFFERENCE, 0.08f, 0.4f),
-          amplitude(pAmplitudeValue, DEFAULT_AMPLITUDE_MAX_DIFFERENCE, 0.08f, 0.4f),
+          frequency(pFrequencyValue, DEFAULT_FREQUENCY_MAX_DIFFERENCE, 0.08f, 0.15f),
+          amplitude(pAmplitudeValue, DEFAULT_AMPLITUDE_MAX_DIFFERENCE, 0.08f, 0.15f),
           offset(pOffset) {}
     Waveform() : Waveform(0.0f, 0.0f, 0.0f) {}
     virtual ~Waveform() = 0;

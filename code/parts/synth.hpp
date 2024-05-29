@@ -9,6 +9,15 @@
 #include "part.hpp"
 #include "waveforms/waveform.hpp"
 
+template <class TType>
+concept IsSynth =
+    std::derived_from<TType, Part<>> &&
+    requires {
+        typename TType::WaveformType;
+        typename TType::WaveformLeashType;
+        requires std::same_as<decltype(std::declval<TType>().waveform), typename TType::WaveformLeashType>;
+    };
+
 template <class TSampleType, SizeType TSampleCountPerUpdate = 4096, SizeType TSampleRate = 44100, SizeType TChannelCount = 1>
 class Synth final : public Part<>
 {
@@ -30,12 +39,12 @@ public:
         requires std::derived_from<TWaveformTemplateType<TSampleType, TSampleCountPerUpdate>, WaveformType>
     static auto CreateSynthFromWaveform(FloatType pFrequency, FloatType pAmplitude) -> Synth
     {
-        return Synth(WaveformLeashType(new TWaveformTemplateType<TSampleType, TSampleCountPerUpdate>(pFrequency, pAmplitude)));
+        return Synth(WaveformLeashType(new TWaveformTemplateType<TSampleType, TSampleCountPerUpdate>(pFrequency / SAMPLE_RATE, pAmplitude)));
     }
 
     Synth(WaveformLeashType pWaveform) : stream(), waveform(std::move(pWaveform)) {}
 
-    auto Start() -> void final
+    auto Start() -> void override
     {
         waveform->Start();
 
@@ -44,7 +53,7 @@ public:
         PlayAudioStream(stream);
     }
 
-    auto Process() -> void final
+    auto Process() -> void override
     {
         waveform->Process();
 
@@ -54,12 +63,12 @@ public:
         UpdateAudioStream(stream, waveform->ViewSamples().data(), waveform->ViewSamples().size());
     }
 
-    auto Draw() -> void final
+    auto Draw() -> void override
     {
         waveform->Draw();
     }
 
-    auto Finish() -> void final
+    auto Finish() -> void override
     {
         waveform->Finish();
 
