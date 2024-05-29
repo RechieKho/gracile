@@ -18,8 +18,8 @@ public:
 
     static constexpr const SizeType SAMPLE_BIT_SIZE = sizeof(SampleType) * 8;
     static constexpr const SizeType SAMPLE_COUNT = TSampleCount;
-    static constexpr const FloatType DEFAULT_FREQUENCY_MAX_DIFFERENCE = 0.0005f;
-    static constexpr const FloatType DEFAULT_AMPLITUDE_MAX_DIFFERENCE = 0.0005f;
+    static constexpr const FloatType DEFAULT_FREQUENCY_MAX_DIFFERENCE = 0.0005;
+    static constexpr const FloatType DEFAULT_AMPLITUDE_MAX_DIFFERENCE = 0.0005;
 
 protected:
     BufferType samples;
@@ -33,12 +33,12 @@ public:
     Waveform(
         FloatType pFrequencyValue,
         FloatType pAmplitudeValue,
-        FloatType pOffset = 0.0f)
+        FloatType pOffset = 0.0)
         : samples(),
-          frequency(pFrequencyValue, DEFAULT_FREQUENCY_MAX_DIFFERENCE, 0.08f, 0.15f),
-          amplitude(pAmplitudeValue, DEFAULT_AMPLITUDE_MAX_DIFFERENCE, 0.08f, 0.15f),
+          frequency(pFrequencyValue, DEFAULT_FREQUENCY_MAX_DIFFERENCE, 0.08, 0.15),
+          amplitude(pAmplitudeValue, DEFAULT_AMPLITUDE_MAX_DIFFERENCE, 0.08, 0.15),
           offset(pOffset) {}
-    Waveform() : Waveform(0.0f, 0.0f, 0.0f) {}
+    Waveform() : Waveform(0.0, 0.0, 0.0) {}
     virtual ~Waveform() = 0;
 
     virtual auto UpdateSamples() -> void = 0;

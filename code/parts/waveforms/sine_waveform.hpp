@@ -18,7 +18,7 @@ protected:
 private:
 public:
     SineWaveform() = default;
-    SineWaveform(FloatType pFrequency, FloatType pAmplitude, FloatType pOffset = 0.0f) : WaveformParentType(pFrequency, pAmplitude, pOffset) {}
+    SineWaveform(FloatType pFrequency, FloatType pAmplitude, FloatType pOffset = 0.0) : WaveformParentType(pFrequency, pAmplitude, pOffset) {}
     ~SineWaveform() override = default;
 
     auto UpdateSamples() -> void override
@@ -33,13 +33,13 @@ public:
 
         for (SizeType i = 0; i < WaveformParentType::samples.size(); i++)
         {
-            const auto indexProportion = (double(i) / WaveformParentType::samples.size());
+            const auto indexProportion = (FloatType(i) / WaveformParentType::samples.size());
             WaveformParentType::samples[i] = static_cast<typename WaveformParentType::SampleType>(
                 std::clamp(
                     (WaveformParentType::amplitude.Interpolate(indexProportion)) *
-                        std::sin(2.0f * std::numbers::pi * (i * WaveformParentType::frequency.Interpolate(indexProportion) + WaveformParentType::offset)),
-                    double(std::numeric_limits<typename WaveformParentType::SampleType>::min()),
-                    double(std::numeric_limits<typename WaveformParentType::SampleType>::max())));
+                        std::sin(2.0 * std::numbers::pi * (i * WaveformParentType::frequency.Interpolate(indexProportion) + WaveformParentType::offset)),
+                    FloatType(std::numeric_limits<typename WaveformParentType::SampleType>::min()),
+                    FloatType(std::numeric_limits<typename WaveformParentType::SampleType>::max())));
         }
         WaveformParentType::offset = newOffset;
     }
