@@ -13,6 +13,7 @@ int main()
 {
     auto app = App();
 
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT, DEFAULT_TITLE);
     InitAudioDevice();
     SetTargetFPS(DEFAULT_TARGET_FPS);
