@@ -100,7 +100,7 @@ public:
     FloatType loudness;
 
     App()
-        : keyboard(), chambers(), loudness(25.0)
+        : keyboard(), chambers(), resonances(), loudness(1600.0)
     {
         // Keyboard.
         // 4th Octave.
@@ -146,7 +146,8 @@ public:
 
         for (auto &[key, synth] : keyboard)
         {
-            const auto amplitude = IsKeyDown(key) ? mouseSpeed * loudness : 0.0;
+            const auto amplitude = loudness * std::log(
+                                                  (IsKeyDown(key) ? mouseSpeed : 0.0) + 1);
             synth.waveform->amplitude.target = amplitude;
             synth.Process();
         }
