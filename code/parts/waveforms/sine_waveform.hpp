@@ -33,11 +33,11 @@ public:
 
         for (SizeType i = 0; i < WaveformParentType::samples.size(); i++)
         {
-            const auto indexProportion = (FloatType(i) / WaveformParentType::samples.size());
+            const auto indexDiminishedProportion = (FloatType(i) / WaveformParentType::samples.size());
             WaveformParentType::samples[i] = static_cast<typename WaveformParentType::SampleType>(
                 std::clamp(
-                    (WaveformParentType::amplitude.Interpolate(indexProportion)) *
-                        std::sin(2.0 * std::numbers::pi * (i * WaveformParentType::frequency.Interpolate(indexProportion) + WaveformParentType::offset)),
+                    (WaveformParentType::amplitude.Interpolate(indexDiminishedProportion)) *
+                        std::sin(2.0 * std::numbers::pi * (i * WaveformParentType::frequency.Interpolate(indexDiminishedProportion) + WaveformParentType::offset)),
                     FloatType(std::numeric_limits<typename WaveformParentType::SampleType>::min()),
                     FloatType(std::numeric_limits<typename WaveformParentType::SampleType>::max())));
         }
