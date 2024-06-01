@@ -9,6 +9,7 @@
 
 #include "parts/part.hpp"
 #include "parts/waveforms/sine_waveform.hpp"
+#include "parts/waveforms/saw_waveform.hpp"
 #include "parts/synth.hpp"
 
 template <class = void>

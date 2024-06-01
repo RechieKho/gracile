@@ -1,15 +1,10 @@
-#ifndef SINE_WAVEFORM_HPP
-#define SINE_WAVEFORM_HPP
-
-#include <algorithm>
-#include <limits>
-#include <cmath>
-#include <numbers>
+#ifndef SAW_WAVEFORM_HPP
+#define SAW_WAVEFORM_HPP
 
 #include "waveform.hpp"
 
 template <class TSampleType, SizeType TSampleCount>
-class SineWaveform final : public Waveform<TSampleType, TSampleCount>
+class SawWaveform final : public Waveform<TSampleType, TSampleCount>
 {
 public:
     using WaveformParentType = Waveform<TSampleType, TSampleCount>;
@@ -17,9 +12,9 @@ public:
 protected:
 private:
 public:
-    SineWaveform() = default;
-    SineWaveform(FloatType pFrequency, FloatType pAmplitude, FloatType pOffset = 0.0) : WaveformParentType(pFrequency, pAmplitude, pOffset) {}
-    ~SineWaveform() override = default;
+    SawWaveform() = default;
+    SawWaveform(FloatType pFrequency, FloatType pAmplitude, FloatType pOffset = 0.0) : WaveformParentType(pFrequency, pAmplitude, pOffset) {}
+    ~SawWaveform() override = default;
 
     auto UpdateSamples() -> void override
     {
@@ -35,10 +30,10 @@ public:
         {
             const auto indexDiminishedProportion = (FloatType(i) / WaveformParentType::samples.size());
             const auto amplitude = WaveformParentType::amplitude.Interpolate(indexDiminishedProportion);
-            const auto phase = 2.0 * std::numbers::pi * (i * WaveformParentType::frequency.Interpolate(indexDiminishedProportion) + WaveformParentType::offset);
+            const auto phase = i * WaveformParentType::frequency.Interpolate(indexDiminishedProportion) + WaveformParentType::offset;
             WaveformParentType::samples[i] = static_cast<typename WaveformParentType::SampleType>(
                 std::clamp(
-                    amplitude * std::sin(phase),
+                    amplitude * std::fmod(phase, 1),
                     FloatType(std::numeric_limits<typename WaveformParentType::SampleType>::min()),
                     FloatType(std::numeric_limits<typename WaveformParentType::SampleType>::max())));
         }
@@ -46,4 +41,4 @@ public:
     }
 };
 
-#endif // SINE_WAVEFORM_HPP
+#endif // SAW_WAVEFORM_HPP
